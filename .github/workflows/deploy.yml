@@ -12,8 +12,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-    			fetch-depth: 0  # Makes the repo not shallow anymore
+
+			- name: Unshallow the repo
+        run: git fetch --all --unshallow        
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,7 +25,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
+          
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
