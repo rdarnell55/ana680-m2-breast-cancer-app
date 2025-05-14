@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-			- name: Unshallow the repo
-        run: git fetch --all --unshallow        
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -25,12 +22,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
-      - name: Deploy to Heroku
+
+      - name: Install Heroku CLI and Deploy
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: rcd-mlapp
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
         run: |
-          git remote add heroku https://git.heroku.com/rcd-mlapp.git
-          echo "machine api.heroku.com\n  login ${{ secrets.HEROKU_EMAIL }}\n  password ${{ secrets.HEROKU_API_KEY }}" > ~/.netrc
-          echo "machine git.heroku.com\n  login ${{ secrets.HEROKU_EMAIL }}\n  password ${{ secrets.HEROKU_API_KEY }}" >> ~/.netrc
+          curl https://cli-assets.heroku.com/install.sh | sh
+          export PATH="$HOME/.local/share/heroku/bin:$PATH"
+          echo "machine api.heroku.com\n  login $HEROKU_EMAIL\n  password $HEROKU_API_KEY" > ~/.netrc
+          echo "machine git.heroku.com\n  login $HEROKU_EMAIL\n  password $HEROKU_API_KEY" >> ~/.netrc
+          heroku git:remote -a $HEROKU_APP_NAME
           git push heroku main --force
