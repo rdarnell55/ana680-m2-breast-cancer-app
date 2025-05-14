@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Breast Cancer Prediction</title>
+</head>
+<body>
+    <h1>Breast Cancer Prediction</h1>
+    <form action="/predict" method="post">
+        <label>Clump Thickness:</label><br>
+        <input type="number" name="Clump Thickness" step="any" required><br><br>
+
+        <label>Uniformity of Cell Size:</label><br>
+        <input type="number" name="Uniformity of Cell Size" step="any" required><br><br>
+
+        <label>Uniformity of Cell Shape:</label><br>
+        <input type="number" name="Uniformity of Cell Shape" step="any" required><br><br>
+
+        <label>Marginal Adhesion:</label><br>
+        <input type="number" name="Marginal Adhesion" step="any" required><br><br>
+
+        <label>Single Epithelial Cell Size:</label><br>
+        <input type="number" name="Single Epithelial Cell Size" step="any" required><br><br>
+
+        <label>Bare Nuclei:</label><br>
+        <input type="number" name="Bare Nuclei" step="any" required><br><br>
+
+        <label>Bland Chromatin:</label><br>
+        <input type="number" name="Bland Chromatin" step="any" required><br><br>
+
+        <label>Normal Nucleoli:</label><br>
+        <input type="number" name="Normal Nucleoli" step="any" required><br><br>
+
+        <label>Mitotic Rate:</label><br>
+        <input type="number" name="Mitotic Rate" step="any" required><br><br>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction %}
+        <h2>Prediction: {{ prediction }}</h2>
+    {% endif %}
+</body>
+</html>
