@@ -13,20 +13,20 @@
 <body>
     <h1>Breast Cancer Prediction App</h1>
     <form action="/predict" method="POST">
-        <label>Radius Mean:
-            <input type="number" name="radius" step="any" value="{{ radius or '' }}" required>
+        <label>Clump Thickness:
+            <input type="number" name="Clump_thickness" step="any" value="{{ Clump_thickness or '' }}" required>
         </label>
-        <label>Texture Mean:
-            <input type="number" name="texture" step="any" value="{{ texture or '' }}" required>
+        <label>Uniformity of Cell Size:
+            <input type="number" name="Uniformity_of_cell_size" step="any" value="{{ Uniformity_of_cell_size or '' }}" required>
         </label>
-        <label>Perimeter Mean:
-            <input type="number" name="perimeter" step="any" value="{{ perimeter or '' }}" required>
+        <label>Uniformity of Cell Shape:
+            <input type="number" name="Uniformity_of_cell_shape" step="any" value="{{ Uniformity_of_cell_shape or '' }}" required>
         </label>
-        <label>Area Mean:
-            <input type="number" name="area" step="any" value="{{ area or '' }}" required>
+        <label>Marginal Adhesion:
+            <input type="number" name="Marginal_adhesion" step="any" value="{{ Marginal_adhesion or '' }}" required>
         </label>
-        <label>Smoothness Mean:
-            <input type="number" name="smoothness" step="any" value="{{ smoothness or '' }}" required>
+        <label>Single Epithelial Cell Size:
+            <input type="number" name="Single_epithelial_cell_size" step="any" value="{{ Single_epithelial_cell_size or '' }}" required>
         </label>
         <input type="submit" value="Predict">
     </form>
