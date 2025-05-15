@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import pickle
 import numpy as np
+import os
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -17,19 +18,25 @@ except Exception as e:
 def home():
     return render_template('index.html')
 
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['GET', 'POST'])
 def predict():
-    if model is None:
-        return "Model not loaded properly", 500
+    prediction = None
+    if request.method == 'POST':
+        try:
+            radius = float(request.form.get('radius'))
+            texture = float(request.form.get('texture'))
+            perimeter = float(request.form.get('perimeter'))
+            area = float(request.form.get('area'))
+            smoothness = float(request.form.get('smoothness'))
 
-    try:
-        features = [float(x) for x in request.form.values()]
-        input_array = np.array([features])
-        prediction = model.predict(input_array)[0]
-        result = "Malignant" if prediction == 1 else "Benign"
-        return render_template('index.html', prediction_text=f'Tumor is likely: {result}')
-    except Exception as e:
-        return render_template('index.html', prediction_text=f'Error: {str(e)}')
+            data = [[radius, texture, perimeter, area, smoothness]]
+            prediction_result = model.predict(data)[0]
+            prediction = "Malignant" if prediction_result == 1 else "Benign"
+        except Exception as e:
+            prediction = f"Error: {e}"
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    return render_template('index.html', prediction=prediction)
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))  # use Heroku's port or fallback to 5000
+    app.run(host='0.0.0.0', port=port, debug=True)
