@@ -1,76 +1,75 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[3]:
 
 
 # train_model.py
-
 """
-This script trains a K-Nearest Neighbors (KNN) classifier on the Breast Cancer Wisconsin dataset.
-It uses all 9 numeric features provided in the original dataset to predict whether a tumor is malignant or benign.
-
-Steps:
-1. Load dataset using ucimlrepo
-2. Preprocess:
-    - Drop ID columns if present
-    - Handle missing values
-    - Convert labels to binary (0 = benign, 1 = malignant)
-3. Split the dataset into training and test sets
-4. Train a KNN classifier
-5. Evaluate model accuracy
-6. Save the trained model as 'model.pkl'
-
-This model will later be deployed using a Flask web app on Heroku.
+This script trains a K-Nearest Neighbors (KNN) classifier to predict breast cancer malignancy
+using the Breast Cancer Wisconsin (Original) dataset from the UCI repository. It handles data
+cleaning, imputation, scaling, model training, evaluation, and finally saves all components
+(model, imputer, scaler) for later use in deployment.
 """
 
-# === Imports ===
+# === Step 1: Import libraries ===
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 from ucimlrepo import fetch_ucirepo
 
-# === Step 1: Load the dataset ===
+# === Step 2: Load the dataset ===
 dataset = fetch_ucirepo(id=15)  # Breast Cancer Wisconsin (Original)
 data = pd.concat([dataset.data.features, dataset.data.targets], axis=1)
-
-# Rename target column to 'Target' and map labels (2 = benign, 4 = malignant) to (0, 1)
 data.rename(columns={'Class': 'Target'}, inplace=True)
-data['Target'] = data['Target'].map({2: 0, 4: 1})
+data['Target'] = data['Target'].map({2: 0, 4: 1})  # Benign: 0, Malignant: 1
 
-# === Step 2: Select all 9 features ===
-feature_columns = [
-    'Clump_thickness', 'Uniformity_of_cell_size', 'Uniformity_of_cell_shape',
-    'Marginal_adhesion', 'Single_epithelial_cell_size', 'Bare_nuclei',
-    'Bland_chromatin', 'Normal_nucleoli', 'Mitoses'
-]
-X = data[feature_columns]
+# === Step 3: Separate features and labels ===
+X = data.drop('Target', axis=1)
 y = data['Target']
 
-# === Step 3: Handle missing values ===
+# === Step 4: Impute missing values ===
 imputer = SimpleImputer(strategy='mean')
-X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=feature_columns)
+X_imputed = pd.DataFrame(imputer.fit_transform(X), columns=X.columns)
 
-# === Step 4: Split the data ===
-X_train, X_test, y_train, y_test = train_test_split(X_imputed, y, test_size=0.25, random_state=42)
+# === Step 5: Train/test split ===
+X_train, X_test, y_train, y_test = train_test_split(
+    X_imputed, y, test_size=0.25, random_state=42
+)
 
-# === Step 5: Train KNN classifier ===
+# === Step 6: Scale the features ===
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# === Step 7: Train KNN model ===
 model = KNeighborsClassifier(n_neighbors=5)
-model.fit(X_train, y_train)
+model.fit(X_train_scaled, y_train)
 
-# === Step 6: Evaluate and save ===
-y_pred = model.predict(X_test)
+# === Step 8: Evaluate accuracy ===
+y_pred = model.predict(X_test_scaled)
 accuracy = accuracy_score(y_test, y_pred)
-print(f"KNN Model Accuracy: {accuracy:.4f}")
+print(f"Model accuracy: {accuracy:.4f}")
 
-# Save the model
-with open('model.pkl', 'wb') as f:
+# === Step 9: Save the model ===
+with open("model.pkl", "wb") as f:
     pickle.dump(model, f)
-
 print("Model saved as model.pkl")
+
+# === Step 10: Save the imputer ===
+with open("imputer.pkl", "wb") as f:
+    pickle.dump(imputer, f)
+print("Imputer saved as imputer.pkl")
+
+# === Step 11: Save the scaler ===
+with open("scaler.pkl", "wb") as f:
+    pickle.dump(scaler, f)
+print("Scaler saved as scaler.pkl")
 
 
 # In[ ]:

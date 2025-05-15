@@ -12,38 +12,44 @@
 </head>
 <body>
     <h1>Breast Cancer Prediction App</h1>
+
+    <!-- HTML form sends a POST request to the /predict endpoint -->
     <form action="/predict" method="POST">
+        <!-- Each field corresponds to a feature used in the ML model -->
         <label>Clump Thickness:
-            <input type="number" name="Clump_thickness" step="any" value="{{ Clump_thickness or '' }}" required>
+            <input type="number" name="Clump_thickness" step="any" value="{{ request.form.get('Clump_thickness', '') }}" required>
         </label>
         <label>Uniformity of Cell Size:
-            <input type="number" name="Uniformity_of_cell_size" step="any" value="{{ Uniformity_of_cell_size or '' }}" required>
+            <input type="number" name="Uniformity_of_cell_size" step="any" value="{{ request.form.get('Uniformity_of_cell_size', '') }}" required>
         </label>
         <label>Uniformity of Cell Shape:
-            <input type="number" name="Uniformity_of_cell_shape" step="any" value="{{ Uniformity_of_cell_shape or '' }}" required>
+            <input type="number" name="Uniformity_of_cell_shape" step="any" value="{{ request.form.get('Uniformity_of_cell_shape', '') }}" required>
         </label>
         <label>Marginal Adhesion:
-            <input type="number" name="Marginal_adhesion" step="any" value="{{ Marginal_adhesion or '' }}" required>
+            <input type="number" name="Marginal_adhesion" step="any" value="{{ request.form.get('Marginal_adhesion', '') }}" required>
         </label>
         <label>Single Epithelial Cell Size:
-            <input type="number" name="Single_epithelial_cell_size" step="any" value="{{ Single_epithelial_cell_size or '' }}" required>
+            <input type="number" name="Single_epithelial_cell_size" step="any" value="{{ request.form.get('Single_epithelial_cell_size', '') }}" required>
         </label>
         <label>Bare Nuclei:
-            <input type="number" name="Bare_nuclei" step="any" value="{{ Bare_nuclei or '' }}" required>
+            <input type="number" name="Bare_nuclei" step="any" value="{{ request.form.get('Bare_nuclei', '') }}" required>
         </label>
         <label>Bland Chromatin:
-            <input type="number" name="Bland_chromatin" step="any" value="{{ Bland_chromatin or '' }}" required>
+            <input type="number" name="Bland_chromatin" step="any" value="{{ request.form.get('Bland_chromatin', '') }}" required>
         </label>
         <label>Normal Nucleoli:
-            <input type="number" name="Normal_nucleoli" step="any" value="{{ Normal_nucleoli or '' }}" required>
+            <input type="number" name="Normal_nucleoli" step="any" value="{{ request.form.get('Normal_nucleoli', '') }}" required>
         </label>
         <label>Mitoses:
-            <input type="number" name="Mitoses" step="any" value="{{ Mitoses or '' }}" required>
+            <input type="number" name="Mitoses" step="any" value="{{ request.form.get('Mitoses', '') }}" required>
         </label>
+
+        <!-- Submit button -->
         <input type="submit" value="Predict">
     </form>
 
-    {% if prediction is defined %}
+    <!-- Display prediction result only if it's defined -->
+    {% if prediction is defined and prediction != "" %}
     <div class="result">
         Prediction: <strong>{{ prediction }}</strong>
     </div>

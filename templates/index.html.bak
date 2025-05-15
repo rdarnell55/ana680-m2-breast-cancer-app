@@ -28,6 +28,18 @@
         <label>Single Epithelial Cell Size:
             <input type="number" name="Single_epithelial_cell_size" step="any" value="{{ Single_epithelial_cell_size or '' }}" required>
         </label>
+        <label>Bare Nuclei:
+            <input type="number" name="Bare_nuclei" step="any" value="{{ Bare_nuclei or '' }}" required>
+        </label>
+        <label>Bland Chromatin:
+            <input type="number" name="Bland_chromatin" step="any" value="{{ Bland_chromatin or '' }}" required>
+        </label>
+        <label>Normal Nucleoli:
+            <input type="number" name="Normal_nucleoli" step="any" value="{{ Normal_nucleoli or '' }}" required>
+        </label>
+        <label>Mitoses:
+            <input type="number" name="Mitoses" step="any" value="{{ Mitoses or '' }}" required>
+        </label>
         <input type="submit" value="Predict">
     </form>
 
