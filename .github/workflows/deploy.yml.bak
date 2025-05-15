@@ -23,15 +23,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Heroku CLI and Deploy
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: rcd-mlapp
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+      - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-          export PATH="$HOME/.local/share/heroku/bin:$PATH"
-          echo "machine api.heroku.com\n  login $HEROKU_EMAIL\n  password $HEROKU_API_KEY" > ~/.netrc
-          echo "machine git.heroku.com\n  login $HEROKU_EMAIL\n  password $HEROKU_API_KEY" >> ~/.netrc
-          heroku git:remote -a $HEROKU_APP_NAME
+          export PATH="/usr/local/bin:$PATH"
+
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git remote add heroku https://${{ secrets.HEROKU_API_KEY }}@git.heroku.com/rcd-mlapp.git
           git push heroku main --force
