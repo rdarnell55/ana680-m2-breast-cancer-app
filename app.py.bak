@@ -1,44 +1,35 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 import pickle
 import numpy as np
 
-# Initialize the Flask app
+# Initialize Flask app
 app = Flask(__name__)
 
-# Load the trained model from pickle file
-with open('breast_cancer_model.pkl', 'rb') as f:
-    model = pickle.load(f)
+# Load the trained model (make sure model.pkl is in the root directory)
+try:
+    with open("model.pkl", "rb") as f:
+        model = pickle.load(f)
+except Exception as e:
+    print(f"Failed to load model: {e}")
+    model = None  # Placeholder if the model fails to load
 
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    if model is None:
+        return "Model not loaded properly", 500
+
     try:
-        # Extract input features from form
-        features = [
-            float(request.form['Clump Thickness']),
-            float(request.form['Uniformity of Cell Size']),
-            float(request.form['Uniformity of Cell Shape']),
-            float(request.form['Marginal Adhesion']),
-            float(request.form['Single Epithelial Cell Size']),
-            float(request.form['Bare Nuclei']),
-            float(request.form['Bland Chromatin']),
-            float(request.form['Normal Nucleoli']),
-            float(request.form['Mitotic Rate'])
-        ]
-
-        # Convert to 2D numpy array for model
-        input_data = np.array([features])
-
-        # Make prediction
-        prediction = model.predict(input_data)[0]
-        result = 'Malignant' if prediction == 4 else 'Benign'
-
-        return render_template('index.html', prediction=result)
+        features = [float(x) for x in request.form.values()]
+        input_array = np.array([features])
+        prediction = model.predict(input_array)[0]
+        result = "Malignant" if prediction == 1 else "Benign"
+        return render_template('index.html', prediction_text=f'Tumor is likely: {result}')
     except Exception as e:
-        return render_template('index.html', prediction=f"Error: {str(e)}")
+        return render_template('index.html', prediction_text=f'Error: {str(e)}')
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
