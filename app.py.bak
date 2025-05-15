@@ -11,14 +11,27 @@ logger = logging.getLogger(__name__)
 # Initialize Flask app
 app = Flask(__name__)
 
-# Load the trained model
+from flask import Flask, render_template, request
+import pickle
+import numpy as np
+import os
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize Flask app
+app = Flask(__name__)
+
+# Load the trained model and scaler
 try:
-    with open("model.pkl", "rb") as f:
-        model = pickle.load(f)
-        logger.info("Model loaded successfully.")
+    with open("breast_cancer_model.pkl", "rb") as f:
+        model, scaler = pickle.load(f)
+        logger.info("Model and scaler loaded successfully.")
 except Exception as e:
-    logger.error(f"Failed to load model: {e}")
-    model = None
+    logger.error(f"Failed to load model and scaler: {e}")
+    model, scaler = None, None
 
 @app.route('/')
 def home():
@@ -27,28 +40,35 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        radius = float(request.form.get('radius', 0))
-        texture = float(request.form.get('texture', 0))
-        perimeter = float(request.form.get('perimeter', 0))
-        area = float(request.form.get('area', 0))
-        smoothness = float(request.form.get('smoothness', 0))
+        # Get user input from the form
+        clump_thickness = float(request.form.get('clump_thickness', 0))
+        uniformity_cell_size = float(request.form.get('uniformity_cell_size', 0))
+        uniformity_cell_shape = float(request.form.get('uniformity_cell_shape', 0))
+        marginal_adhesion = float(request.form.get('marginal_adhesion', 0))
+        epithelial_cell_size = float(request.form.get('epithelial_cell_size', 0))
 
-        logger.info(f"Received input: radius={radius}, texture={texture}, perimeter={perimeter}, area={area}, smoothness={smoothness}")
+        # Log the received values
+        logger.info(f"📥 Received input: {clump_thickness}, {uniformity_cell_size}, {uniformity_cell_shape}, {marginal_adhesion}, {epithelial_cell_size}")
 
-        data = [[radius, texture, perimeter, area, smoothness]]
-        prediction_result = model.predict(data)[0]
+        # Prepare and scale input data
+        input_data = np.array([[clump_thickness, uniformity_cell_size, uniformity_cell_shape, marginal_adhesion, epithelial_cell_size]])
+        input_scaled = scaler.transform(input_data)
+
+        # Make prediction
+        prediction_result = model.predict(input_scaled)[0]
         prediction = "Malignant" if prediction_result == 1 else "Benign"
 
-        logger.info(f"Model prediction: {prediction}")
+        logger.info(f"🔮 Prediction: {prediction}")
+
         return render_template('index.html',
                                prediction=prediction,
-                               radius=radius,
-                               texture=texture,
-                               perimeter=perimeter,
-                               area=area,
-                               smoothness=smoothness)
+                               clump_thickness=clump_thickness,
+                               uniformity_cell_size=uniformity_cell_size,
+                               uniformity_cell_shape=uniformity_cell_shape,
+                               marginal_adhesion=marginal_adhesion,
+                               epithelial_cell_size=epithelial_cell_size)
     except Exception as e:
-        logger.error(f"Error during prediction: {e}")
+        logger.error(f"❗ Error during prediction: {e}")
         return render_template('index.html', prediction=f"Error: {str(e)}")
 
 if __name__ == '__main__':
