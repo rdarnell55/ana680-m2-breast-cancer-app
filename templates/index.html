@@ -17,7 +17,7 @@
     <form action="/predict" method="POST">
         <!-- Each field corresponds to a feature used in the ML model -->
         <label>Clump Thickness (0-10):
-            <input type="number" name="Clump_thickness)" step="any" value="{{ request.form.get('Clump_thickness', '') }}" required>
+            <input type="number" name="Clump_thickness" step="any" value="{{ request.form.get('Clump_thickness', '') }}" required>
         </label>
         <label>Uniformity of Cell Size (0-10):
             <input type="number" name="Uniformity_of_cell_size" step="any" value="{{ request.form.get('Uniformity_of_cell_size', '') }}" required>
