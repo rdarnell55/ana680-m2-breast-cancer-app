@@ -109,5 +109,8 @@ To verify functionality, several test cases were used—some skewed benign, othe
 
 - We updated the system to use **all 9 features** for better performance.
 
+<<<<<<< HEAD
 - The assignment emphasizes practical skills in building ML deployment pipelines, not just theoretical accuracy.
-
+=======
+- The assignment emphasizes practical skills in building ML deployment pipelines, not just theoretical accuracy.
+>>>>>>> 42d06d4 (feat: updated for deployment)
