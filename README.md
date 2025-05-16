@@ -81,7 +81,6 @@ The goal of this assignment was to:
 | `trigger.txt`          | Dummy file used to trigger Heroku builds when needed                        |
 | `heroku_log.txt`       | Optional local file used for capturing Heroku logs during development       |
 
-
 ## How It Works
 
 1. User enters 9 cell features into a form on the web page.
@@ -110,4 +109,8 @@ To verify functionality, several test cases were used—some skewed benign, othe
 
 - We updated the system to use **all 9 features** for better performance.
 
+<<<<<<< HEAD
 - The assignment emphasizes practical skills in building ML deployment pipelines, not just theoretical accuracy.
+=======
+- The assignment emphasizes practical skills in building ML deployment pipelines, not just theoretical accuracy.
+>>>>>>> 42d06d4 (feat: updated for deployment)
