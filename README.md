@@ -103,6 +103,11 @@ To verify functionality, several test cases were used—some skewed benign, othe
 
 - CI/CD: Any push to the `main` branch triggers deployment via GitHub Actions.
 
+## Live Demo
+
+You can access the deployed app here:  
+[Breast Cancer Prediction App on Heroku](https://rcd-mlapp-7d9ac813fc0f.herokuapp.com/)
+
 ## Notes & Reflection
 
 - Initially, only 5 features were used to simplify input. However, this resulted in low model accuracy.
