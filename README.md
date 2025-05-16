@@ -62,25 +62,25 @@ The goal of this assignment was to:
   
   - `1` → Malignant
 
-## App Structure
+## Project Structure Summary
 
-<pre>
-```plaintext
-project-root/
-├── app.py # Flask web app
-├── train_model.py # Training script
-├── model.pkl # Trained model
-├── imputer.pkl # Imputation transformer
-├── scaler.pkl # Scaler transformer
-├── requirements.txt # Dependencies
-├── Procfile # Heroku process file
-├── templates/
-│ └── index.html # HTML form for the web app
-├── .github/
-│ └── workflows/
-│ └── deploy.yml # GitHub Actions workflow
-```
-</pre>
+| File / Folder         | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| `.github/workflows/`   | Contains GitHub Actions workflow for automated Heroku deployment            |
+| `templates/`           | HTML templates used by Flask (e.g., `index.html` for the UI form)           |
+| `app.py`               | Main Flask app: loads model, processes input, handles prediction requests   |
+| `train_model.py`       | Script to fetch, clean, and train the model, saving `model.pkl`, etc.       |
+| `model.pkl`            | Trained K-Nearest Neighbors model serialized with pickle                    |
+| `imputer.pkl`          | Saved `SimpleImputer` to handle missing data during prediction              |
+| `scaler.pkl`           | Saved `StandardScaler` used for consistent feature scaling                  |
+| `requirements.txt`     | Python package dependencies for the app                                     |
+| `Procfile`             | Specifies startup command for deploying the app on Heroku                   |
+| `.python-version`      | Specifies Python version for compatibility with Heroku’s buildpack          |
+| `.gitignore`           | Lists files and folders to exclude from version control                     |
+| `README.md`            | Project documentation (you’re reading it!)                                  |
+| `trigger.txt`          | Dummy file used to trigger Heroku builds when needed                        |
+| `heroku_log.txt`       | Optional local file used for capturing Heroku logs during development       |
+
 
 ## How It Works
 
